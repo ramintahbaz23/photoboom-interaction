@@ -4,11 +4,12 @@ A playful image explosion interaction built with Next.js, TypeScript, Framer Mot
 
 ## Features
 
-- 🎨 Interactive exploding images on mouse/touch interaction
-- 📱 Fully responsive design
-- ⚡ Built with Next.js 15 and App Router
-- 🎭 Smooth animations with Framer Motion
-- 🎨 Styled with Tailwind CSS
+- Interactive exploding images on mouse/touch interaction
+- Fully responsive design
+- Built with Next.js 15 and App Router
+- Smooth animations with Framer Motion
+- Styled with Tailwind CSS
+- Developed with Cursor
 
 ## Getting Started
 
