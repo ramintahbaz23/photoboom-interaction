@@ -7,6 +7,7 @@ import AnimatedPage from '@/components/AnimatedPage';
 import { photoboomMetadata } from '@/app/page';
 import { essay01Metadata } from '@/app/essays/essay-01/page';
 import { paymentStatusMetadata } from '@/app/paymentstatus/page';
+import { visualSystemHoverMetadata } from '@/app/visual-system-hover/page';
 
 type WorkItem = {
   id: string;
@@ -31,6 +32,13 @@ const fragments: WorkItem[] = [
     title: paymentStatusMetadata.title,
     description: paymentStatusMetadata.cardDescription,
     href: paymentStatusMetadata.href,
+  },
+  {
+    id: visualSystemHoverMetadata.id,
+    date: visualSystemHoverMetadata.cardDate,
+    title: visualSystemHoverMetadata.title,
+    description: visualSystemHoverMetadata.cardDescription,
+    href: visualSystemHoverMetadata.href,
   },
 ];
 
@@ -285,6 +293,7 @@ export default function CraftPage() {
     </AnimatedPage>
   );
 }
+
 
 
 

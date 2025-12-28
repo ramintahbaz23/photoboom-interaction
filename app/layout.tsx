@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, IBM_Plex_Mono } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import "./globals.css";
@@ -11,6 +11,12 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
+  weight: ["400", "500", "600"],
   subsets: ["latin"],
 });
 
@@ -32,7 +38,7 @@ export default async function RootLayout({ children }: LayoutProps) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${ibmPlexMono.variable} font-sans antialiased`}
       >
         {children}
 
@@ -53,12 +59,6 @@ export default async function RootLayout({ children }: LayoutProps) {
                   className="text-xs sm:text-sm font-medium tracking-wide text-white/80 hover:text-white transition-colors"
                 >
                   Craft
-                </Link>
-                <Link
-                  href="/gear"
-                  className="text-xs sm:text-sm font-medium tracking-wide text-white/80 hover:text-white transition-colors"
-                >
-                  Gear
                 </Link>
                 <Link
                   href="/elsewhere"
