@@ -115,7 +115,7 @@ export default function VisualSystemHoverPage() {
       category: 'WD',
       bgColor: 'rgba(42, 42, 42, 0.5)',
       image: '/images/image4.jpeg',
-      video: '/videos/Mr_rogers.mp4',
+      video: '/videos/Fred Rogers.mp4',
     },
   ];
 
