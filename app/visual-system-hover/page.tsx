@@ -32,8 +32,10 @@ export default function VisualSystemHoverPage() {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [openModal, setOpenModal] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const modalRef = useRef<HTMLDivElement>(null);
   const resizeHandleRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   
   const width = useMotionValue(400);
   const height = useMotionValue(300);
@@ -51,13 +53,21 @@ export default function VisualSystemHoverPage() {
     if (!openModal) {
       x.set(0);
       y.set(0);
+      setIsMuted(true); // Reset to muted when modal closes
     }
   }, [openModal, x, y]);
+
+  // Update video mute state when isMuted changes
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = isMuted;
+    }
+  }, [isMuted]);
 
   const description = (
     <>
       <p className="mb-2 sm:mb-3">
-        An exploration of hover interactions within a bento-style grid layout. Each card responds to hover with subtle scale, opacity, and border transitions, creating a cohesive visual system that feels responsive and intentional.
+        An exploration of hover interactions within a bento-style grid layout, featuring visuals of my heroes. Each card responds to hover with subtle scale, opacity, and border transitions, creating a cohesive visual system that feels responsive and intentional.
       </p>
       <p className="mb-2 sm:mb-3">
         Built using Next.js, Framer Motion, and Tailwind CSS.
@@ -65,62 +75,47 @@ export default function VisualSystemHoverPage() {
     </>
   );
 
-  // Grid items - 2 columns, 3 rows, all same size
+  // Grid items - 2 columns, 2 rows, all same size
   const gridItems: GridItem[] = [
     { 
       id: '1', 
-      title: 'Building the Nverse Ecosystem', 
+      title: 'Michael Jordan Dunk Contest', 
       subtitle: 'Nverse', 
-      year: '2023', 
+      year: '1987', 
       category: 'BD',
       bgColor: 'rgba(42, 42, 42, 0.5)', // Dark grey with more transparency
       image: '/images/image1.jpeg',
+      video: '/videos/Michael_Jordan.mp4',
     },
     { 
       id: '2', 
-      title: 'Michael Jordan Dunk Contest', 
+      title: 'Steve Jobs iPhone unveiling', 
       subtitle: 'Sodo', 
-      year: '1988', 
+      year: '2007', 
       category: 'BD',
       bgColor: 'rgba(58, 42, 26, 0.5)', // Dark brown with more transparency
       image: '/images/image2.jpeg',
-      video: '/videos/jordan_dunk.mp4',
+      video: '/videos/Steve Jobs introduces iPhone in 2007.mp4',
     },
     { 
       id: '3', 
-      title: 'Designing Athletic Performance', 
+      title: 'Robin Williams (The Parkinson Show)', 
       subtitle: 'Sodo Athletic Lab', 
-      year: '2023', 
+      year: '2001', 
       category: 'WD',
       bgColor: 'rgba(42, 42, 42, 0.5)',
       image: '/images/image3.jpeg',
+      video: '/videos/Robin Williams.mp4',
     },
     { 
       id: '4', 
-      title: 'Journey Through Lofi Beats', 
+      title: 'Mr Rogers Emmy Speech', 
       subtitle: 'MarsLofi', 
-      year: '2022', 
+      year: '1997', 
       category: 'WD',
       bgColor: 'rgba(42, 42, 42, 0.5)',
       image: '/images/image4.jpeg',
-    },
-    { 
-      id: '5', 
-      title: 'Rotating Glassbox Animation', 
-      subtitle: 'MoonLogo', 
-      year: '2022', 
-      category: 'CD',
-      bgColor: 'rgba(42, 42, 42, 0.5)',
-      image: '/images/image1.jpeg',
-    },
-    { 
-      id: '6', 
-      title: 'Transforming Healthcare Design', 
-      subtitle: 'Hopmedic', 
-      year: '2022', 
-      category: 'PD',
-      bgColor: 'rgba(58, 42, 26, 0.5)',
-      image: '/images/image2.jpeg',
+      video: '/videos/Mr_rogers.mp4',
     },
   ];
 
@@ -136,6 +131,7 @@ export default function VisualSystemHoverPage() {
           title: visualSystemHoverMetadata.shareTitle,
           text: visualSystemHoverMetadata.shareText,
         }}
+        extraSpacing={48}
       >
         {/* Grid - 2 columns, 3 rows */}
         <div className="w-full max-w-full">
@@ -384,14 +380,57 @@ export default function VisualSystemHoverPage() {
                     {/* Content area */}
                     <div className="flex-1 relative overflow-hidden">
                       {selectedItem.video ? (
-                        <video
-                          src={selectedItem.video}
-                          autoPlay
-                          loop
-                          muted
-                          playsInline
-                          className="w-full h-full object-cover"
-                        />
+                        <>
+                          <video
+                            ref={videoRef}
+                            src={selectedItem.video}
+                            autoPlay
+                            loop
+                            muted={isMuted}
+                            playsInline
+                            className="w-full h-full object-cover"
+                          />
+                          {/* Mute/Unmute toggle button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsMuted(!isMuted);
+                            }}
+                            className="absolute bottom-2 left-2 z-30 w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center transition-colors backdrop-blur-sm cursor-pointer"
+                            aria-label={isMuted ? 'Unmute' : 'Mute'}
+                          >
+                            {isMuted ? (
+                              <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="white"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                                <line x1="23" y1="9" x2="17" y2="15" />
+                                <line x1="17" y1="9" x2="23" y2="15" />
+                              </svg>
+                            ) : (
+                              <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="white"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+                              </svg>
+                            )}
+                          </button>
+                        </>
                       ) : (
                         <Image
                           src={selectedItem.image}

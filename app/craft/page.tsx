@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -11,9 +11,11 @@ import { essay02Metadata } from '@/app/essays/essay-02/page';
 import { paymentStatusMetadata } from '@/app/paymentstatus/page';
 import { visualSystemHoverMetadata } from '@/app/visual-system-hover/page';
 import { carouselMetadata } from '@/app/interactions/carousel/page';
+import { electricBorderMetadata } from '@/app/interactions/electric-border/page';
+import { bloomMetadata } from '@/app/interactions/bloom/page';
 import { keycadetsMetadata } from '@/app/products/keycadets/page';
 import { doritosLoadedMetadata } from '@/app/products/doritos-loaded/page';
-import { coCreatorMetadata } from '@/app/products/co-creator/page';
+import { craftMetadata } from '@/app/products/craft/page';
 import { sunsetMetadata } from '@/app/products/sunset/page';
 import { thisTrackisCrackMetadata } from '@/app/products/thistrackiscrack/page';
 import { film01Metadata } from '@/app/films/film-01/page';
@@ -30,6 +32,7 @@ type WorkItem = {
   badge?: string;
   href?: string;
 };
+
 
 const fragments: WorkItem[] = [
   {
@@ -60,7 +63,26 @@ const fragments: WorkItem[] = [
     description: carouselMetadata.cardDescription,
     href: carouselMetadata.href,
   },
-];
+  {
+    id: electricBorderMetadata.id,
+    date: electricBorderMetadata.cardDate,
+    title: electricBorderMetadata.title,
+    description: electricBorderMetadata.cardDescription,
+    href: electricBorderMetadata.href,
+  },
+  {
+    id: bloomMetadata.id,
+    date: bloomMetadata.cardDate,
+    title: bloomMetadata.title,
+    description: bloomMetadata.cardDescription,
+    href: bloomMetadata.href,
+  },
+].sort((a, b) => {
+  // Sort by date descending (most recent first)
+  const dateA = parseDate(a.date || '');
+  const dateB = parseDate(b.date || '');
+  return dateB - dateA;
+});
 
 const products: WorkItem[] = [
   {
@@ -78,11 +100,11 @@ const products: WorkItem[] = [
     href: doritosLoadedMetadata.href,
   },
   {
-    id: coCreatorMetadata.id,
-    date: coCreatorMetadata.cardDate,
-    title: coCreatorMetadata.title,
-    description: coCreatorMetadata.cardDescription,
-    href: coCreatorMetadata.href,
+    id: craftMetadata.id,
+    date: craftMetadata.cardDate,
+    title: craftMetadata.title,
+    description: craftMetadata.cardDescription,
+    href: craftMetadata.href,
   },
   {
     id: sunsetMetadata.id,
@@ -223,15 +245,14 @@ const rowVariants = {
 };
 
 export default function CraftPage() {
-  // Restore scroll position on mount
-  useEffect(() => {
+  // Restore scroll position on mount - use useLayoutEffect to run before paint
+  useLayoutEffect(() => {
     const savedScrollPosition = sessionStorage.getItem('craftPageScrollPosition');
     if (savedScrollPosition) {
-      // Use requestAnimationFrame to ensure DOM is ready
-      requestAnimationFrame(() => {
-        window.scrollTo(0, parseInt(savedScrollPosition, 10));
-        sessionStorage.removeItem('craftPageScrollPosition');
-      });
+      // Restore immediately to prevent visual jump
+      const scrollY = parseInt(savedScrollPosition, 10);
+      window.scrollTo(0, scrollY);
+      sessionStorage.removeItem('craftPageScrollPosition');
     }
   }, []);
 
@@ -288,7 +309,7 @@ export default function CraftPage() {
               },
             }}
           >
-            <div className="text-[16px] sm:text-[17px] text-gray-700 leading-relaxed max-w-[576px] space-y-3 sm:space-y-4">
+            <div className="text-[16px] sm:text-[17px] text-gray-700 leading-relaxed max-w-[560px] mx-auto space-y-3 sm:space-y-4">
               <p>
                 I practice my craft through product, film, hardware, and writing. Each form offers a different way to tell a story.
               </p>
@@ -323,14 +344,14 @@ export default function CraftPage() {
             }}
           >
             <div
-              className="flex items-baseline justify-between mb-8 px-3.5 sm:px-4"
+              className="flex items-baseline justify-between mb-8 max-w-[560px] mx-auto"
             >
               <h2 className="text-[16px] font-medium text-black">
                 Interactions
               </h2>
             </div>
 
-            <div className="space-y-1.5 sm:space-y-2 max-w-[576px]">
+            <div className="space-y-1.5 sm:space-y-2 max-w-[560px] mx-auto">
               {sortedFragments.map((item, index) => (
                 <motion.div
                   key={item.id}
@@ -391,13 +412,13 @@ export default function CraftPage() {
               },
             }}
           >
-            <div className="flex items-baseline justify-between mb-8 px-3.5 sm:px-4">
+            <div className="flex items-baseline justify-between mb-8 max-w-[560px] mx-auto">
               <h2 className="text-[16px] font-medium text-black">
                 Products
               </h2>
             </div>
 
-            <div className="space-y-1.5 sm:space-y-2 max-w-[576px]">
+            <div className="space-y-1.5 sm:space-y-2 max-w-[560px] mx-auto">
               {sortedProducts.map((item, index) => (
                 <motion.div
                   key={item.id}
@@ -458,13 +479,13 @@ export default function CraftPage() {
               },
             }}
           >
-            <div className="flex items-baseline justify-between mb-8 px-3.5 sm:px-4">
+            <div className="flex items-baseline justify-between mb-8 max-w-[560px] mx-auto">
               <h2 className="text-[16px] font-medium text-black">
                 Film
               </h2>
             </div>
 
-            <div className="space-y-1.5 sm:space-y-2 max-w-[576px]">
+            <div className="space-y-1.5 sm:space-y-2 max-w-[560px] mx-auto">
               {sortedFilms.map((item, index) => (
                 <motion.div
                   key={item.id}
@@ -525,13 +546,13 @@ export default function CraftPage() {
               },
             }}
           >
-            <div className="flex items-baseline justify-between mb-8 px-3.5 sm:px-4">
+            <div className="flex items-baseline justify-between mb-8 max-w-[560px] mx-auto">
               <h2 className="text-[16px] font-medium text-black">
                 Essays
               </h2>
             </div>
 
-            <div className="space-y-1.5 sm:space-y-2 max-w-[576px]">
+            <div className="space-y-1.5 sm:space-y-2 max-w-[560px] mx-auto">
               {sortedEssays.map((item, index) => (
                 <motion.div
                   key={item.id}
@@ -591,25 +612,22 @@ export default function CraftPage() {
               },
             }}
           >
-            <div className="flex items-baseline justify-between mb-4 px-3.5 sm:px-4">
+            <div className="flex items-baseline justify-between mb-4 max-w-[560px] mx-auto">
               <h2 className="text-[16px] font-medium text-black">
                 Case studies
               </h2>
             </div>
 
-            <div className="px-3.5 sm:px-4 space-y-3 sm:space-y-4 text-[15px] sm:text-[16px] text-gray-700 leading-relaxed max-w-[576px]">
+            <div className="px-3.5 sm:px-4 space-y-3 sm:space-y-4 text-[15px] sm:text-[16px] text-gray-700 leading-relaxed max-w-[560px] mx-auto">
               <p>
-                If you're interested in exploring specific examples of my work, design process, or problem-solving approaches, please{' '}
+                If you want to see how I approach problems or go deeper on specific work,{' '}
                 <Link
                   href="/elsewhere"
                   className="underline underline-offset-2"
                 >
-                  reach out
+                  let&apos;s talk.
                 </Link>
-                .
-              </p>
-              <p>
-                I believe in sharing the right context and depth for each project, and would be happy to discuss selected case studies that align with your interests or requirements.
+                {' '}I&apos;m happy to walk through projects that match what you&apos;re curious about.
               </p>
             </div>
           </motion.section>

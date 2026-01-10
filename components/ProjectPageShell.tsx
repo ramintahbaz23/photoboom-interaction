@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
+import { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 type ShareConfig = {
@@ -18,6 +19,7 @@ type ProjectPageShellProps = {
   backLabel?: string;
   shareConfig?: ShareConfig;
   children?: ReactNode;
+  extraSpacing?: number; // Additional spacing in px to add on top of calculated spacing
 };
 
 export default function ProjectPageShell({
@@ -28,8 +30,11 @@ export default function ProjectPageShell({
   backLabel = 'Craft',
   shareConfig,
   children,
+  extraSpacing = 0,
 }: ProjectPageShellProps) {
   const router = useRouter();
+  const textContentRef = useRef<HTMLDivElement>(null);
+  const [spacing, setSpacing] = useState<number>(12); // Default spacing in px (desktop default)
 
   const handleBackClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     // If going back to craft page, save current scroll position (though we're leaving, not coming back)
@@ -71,6 +76,37 @@ export default function ProjectPageShell({
   const showShare = Boolean(shareConfig);
   const hasChildren = Boolean(children);
 
+  // Calculate dynamic spacing based on copy height
+  useEffect(() => {
+    if (!hasChildren || !textContentRef.current) return;
+
+    const calculateSpacing = () => {
+      const textHeight = textContentRef.current?.offsetHeight || 0;
+      const isMobile = window.innerWidth < 640;
+      
+      // Base minimum spacing: 32px (mobile) / 8px (desktop) - very tight
+      const baseSpacing = isMobile ? 32 : 8;
+      
+      // Ensure minimum spacing is maintained, but add more if copy is very tall
+      // This prevents animation from touching copy while maintaining consistency
+      if (textHeight > 150) {
+        // Only add extra spacing for very tall copy
+        const extraSpacing = Math.min((textHeight - 150) * 0.08, 12); // Max 12px extra
+        setSpacing(baseSpacing + extraSpacing);
+      } else {
+        setSpacing(baseSpacing);
+      }
+    };
+
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      calculateSpacing();
+    });
+    
+    window.addEventListener('resize', calculateSpacing);
+    return () => window.removeEventListener('resize', calculateSpacing);
+  }, [hasChildren, description]);
+
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#E2DEDB', overflowX: 'hidden', overflowY: 'visible' }}>
       {/* Header + content wrapper */}
@@ -101,7 +137,7 @@ export default function ProjectPageShell({
               </Link>
 
               {/* Content column with title, date, and body */}
-              <div className="max-w-[560px] flex-1">
+              <div className="max-w-[560px] flex-1" ref={textContentRef}>
                 <div className="mb-0.5">
                   <h1 className="text-[18px] font-bold text-gray-900" style={{ color: '#111827' }}>
                     {title || 'Photo boom'}
@@ -115,14 +151,23 @@ export default function ProjectPageShell({
                 <div className="text-[18px] text-gray-800 leading-[1.65] sm:leading-[1.5] w-full [&_p:not(:first-child)]:mt-4 [&_p:not(:first-child)]:sm:mt-6">
                   {description}
                 </div>
-                {hasChildren && <div className="h-4 sm:h-0" />}
               </div>
             </div>
           </div>
 
           {/* Optional children section for animation/interactive content */}
           {children && (
-            <div className="flex items-start justify-center pt-6 sm:pt-0 pb-28 sm:pb-32 w-full" style={{ overflow: 'visible', overflowX: 'visible', overflowY: 'visible', position: 'relative', zIndex: 1, marginTop: '-16px' }}>
+            <div 
+              className="flex items-start justify-center pb-28 sm:pb-32 w-full" 
+              style={{ 
+                overflow: 'visible', 
+                overflowX: 'visible', 
+                overflowY: 'visible', 
+                position: 'relative', 
+                zIndex: 1,
+                paddingTop: `${spacing + extraSpacing}px`
+              }}
+            >
               {children}
             </div>
           )}

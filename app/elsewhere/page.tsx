@@ -8,19 +8,19 @@ export default function ElsewherePage() {
           <div className="max-w-[680px] mx-auto">
               {/* Intro copy */}
               <div className="mb-10 sm:mb-14 px-3.5 sm:px-4">
-                <div className="text-[16px] sm:text-[17px] text-gray-700 leading-relaxed max-w-[576px] space-y-3 sm:space-y-4">
+                <div className="text-[16px] sm:text-[17px] text-gray-700 leading-relaxed max-w-[560px] mx-auto space-y-3 sm:space-y-4">
                   <p>
-                    I&apos;m always open to new projects, collaborations, or just a good conversation about design and storytelling. Whether you have something specific in mind or just want to connect, feel free to reach out.
+                    I&apos;m always interested in exploring ideas, building things, and talking about design and craft. Whether it&apos;s product, robotics, film or something that tells a story, I&apos;m curious. Reach out.
                   </p>
                 </div>
               </div>
 
               {/* Elsewhere section */}
               <div className="mb-10 sm:mb-14 px-3.5 sm:px-4">
-                <h1 className="text-[16px] font-medium text-black mb-8">
+                <h1 className="text-[16px] font-medium text-black mb-8 max-w-[560px] mx-auto">
                   Elsewhere
                 </h1>
-                <div className="space-y-3 sm:space-y-4 text-[16px] sm:text-[17px] text-gray-700 max-w-[576px]">
+                <div className="space-y-3 sm:space-y-4 text-[16px] sm:text-[17px] text-gray-700 max-w-[560px] mx-auto">
                   <p>
                     <a
                       href="mailto:ramin@me.com"
@@ -76,10 +76,10 @@ export default function ElsewherePage() {
 
               {/* Colophon section */}
               <div className="mb-10 sm:mb-12 px-3.5 sm:px-4">
-                <h1 className="text-[16px] font-medium text-black mb-8">
+                <h1 className="text-[16px] font-medium text-black mb-8 max-w-[560px] mx-auto">
                   Built by
                 </h1>
-                <div className="space-y-3 sm:space-y-4 text-[16px] sm:text-[17px] text-gray-700 leading-relaxed max-w-[576px]">
+                <div className="space-y-3 sm:space-y-4 text-[16px] sm:text-[17px] text-gray-700 leading-relaxed max-w-[560px] mx-auto">
                   <p>
                     Ramin Tahbaz
                     <br />
@@ -93,7 +93,7 @@ export default function ElsewherePage() {
                     </a>
                   </p>
                   <p>
-                    Last updated: December 13, 2025
+                    Last updated: January 11, 2026
                     <br />
                     Built using Next.js, Framer Motion and Tailwind CSS.
                   </p>
@@ -105,6 +105,7 @@ export default function ElsewherePage() {
     </AnimatedPage>
   );
 }
+
 
 
 

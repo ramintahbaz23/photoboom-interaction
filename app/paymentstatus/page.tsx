@@ -37,10 +37,9 @@ export default function PaymentStatusPage() {
           title: paymentStatusMetadata.shareTitle,
           text: paymentStatusMetadata.shareText,
         }}
+        extraSpacing={160}
       >
-        <div className="pt-8 sm:pt-0">
-          <Music />
-        </div>
+        <Music />
       </ProjectPageShell>
     </AnimatedPage>
   );
