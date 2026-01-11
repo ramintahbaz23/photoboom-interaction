@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, IBM_Plex_Mono } from "next/font/google";
+import Script from "next/script";
 import Navigation from "@/components/Navigation";
 import "./globals.css";
 
@@ -22,8 +23,32 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "Ramin — Design Engineer",
   description:
-    "The portfolio of Ramin, a Design Engineer exploring interactive products, motion systems, and thoughtful digital experiences.",
+    "Designer who codes, working across product, film, hardware, and writing. Self-taught, learning by doing.",
   themeColor: "#E2DEDB",
+  openGraph: {
+    title: "Ramin — Design Engineer",
+    description:
+      "Designer who codes, working across product, film, hardware, and writing. Self-taught, learning by doing.",
+    url: "https://ramintahbaz.com",
+    siteName: "Ramin — Design Engineer",
+    images: [
+      {
+        url: "/images/share-og.png",
+        width: 1200,
+        height: 630,
+        alt: "Ramin — Design Engineer",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ramin — Design Engineer",
+    description:
+      "Designer who codes, working across product, film, hardware, and writing. Self-taught, learning by doing.",
+    images: ["/images/share-og.png"],
+  },
 };
 
 export default async function RootLayout({
@@ -31,11 +56,30 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Ramin",
+    "jobTitle": "Design Engineer",
+    "description": "Designer who codes, working across product, film, hardware, and writing. Self-taught, learning by doing.",
+    "url": "https://ramintahbaz.com",
+    "sameAs": [
+      "https://x.com/ramintahbaz"
+    ]
+  };
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${ibmPlexMono.variable} font-sans antialiased`}
       >
+        <Script
+          id="structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData),
+          }}
+        />
         {children}
 
         {/* Bottom Navbar (global, non-animated) */}
