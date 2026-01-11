@@ -10,8 +10,9 @@ export default function ElectricBorder() {
   const [color, setColor] = useState('#FF00FF');
   const [isMobile, setIsMobile] = useState(false);
   
-  // Ref for the filter element to query animate elements
+  // Refs for the filter elements to query animate elements (desktop and mobile)
   const filterRef = useRef<SVGFilterElement>(null);
+  const mobileFilterRef = useRef<SVGFilterElement>(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -32,32 +33,44 @@ export default function ElectricBorder() {
 
   // Update animation speed via DOM manipulation instead of React re-renders
   useEffect(() => {
-    if (filterRef.current) {
-      const animates = filterRef.current.querySelectorAll('animate');
-      if (animates.length >= 4) {
-        // Update dur attributes for all animations
-        animates[0].setAttribute('dur', `${speed}s`);
-        animates[1].setAttribute('dur', `${speed}s`);
-        animates[2].setAttribute('dur', `${speed}s`);
-        animates[3].setAttribute('dur', `${speed}s`);
-        
-        // Update begin attributes
-        animates[0].setAttribute('begin', `-${speed * 0.3}s`);
-        animates[1].setAttribute('begin', `-${speed * 0.7}s`);
-        animates[2].setAttribute('begin', `-${speed * 0.5}s`);
-        animates[3].setAttribute('begin', `-${speed * 0.2}s`);
+    const updateFilter = (filter: SVGFilterElement | null) => {
+      if (filter) {
+        const animates = filter.querySelectorAll('animate');
+        if (animates.length >= 4) {
+          // Update dur attributes for all animations
+          animates[0].setAttribute('dur', `${speed}s`);
+          animates[1].setAttribute('dur', `${speed}s`);
+          animates[2].setAttribute('dur', `${speed}s`);
+          animates[3].setAttribute('dur', `${speed}s`);
+          
+          // Update begin attributes
+          animates[0].setAttribute('begin', `-${speed * 0.3}s`);
+          animates[1].setAttribute('begin', `-${speed * 0.7}s`);
+          animates[2].setAttribute('begin', `-${speed * 0.5}s`);
+          animates[3].setAttribute('begin', `-${speed * 0.2}s`);
+        }
       }
-    }
+    };
+    
+    // Update both desktop and mobile filters
+    updateFilter(filterRef.current);
+    updateFilter(mobileFilterRef.current);
   }, [speed]);
 
   // Update chaos (displacement scale) via DOM manipulation
   useEffect(() => {
-    if (filterRef.current) {
-      const displacementMap = filterRef.current.querySelector('feDisplacementMap');
-      if (displacementMap) {
-        displacementMap.setAttribute('scale', String(chaos));
+    const updateFilter = (filter: SVGFilterElement | null) => {
+      if (filter) {
+        const displacementMap = filter.querySelector('feDisplacementMap');
+        if (displacementMap) {
+          displacementMap.setAttribute('scale', String(chaos));
+        }
       }
-    }
+    };
+    
+    // Update both desktop and mobile filters
+    updateFilter(filterRef.current);
+    updateFilter(mobileFilterRef.current);
   }, [chaos]);
 
   return (
@@ -130,8 +143,9 @@ export default function ElectricBorder() {
                 yChannelSelector="B" 
               />
             </filter>
-            {/* Mobile filter - smoother with lower numOctaves and reduced animation values */}
+            {/* Mobile filter - smoother with lower numOctaves but same animation values as desktop for consistent speed */}
             <filter 
+              ref={mobileFilterRef}
               id="ramin-electric-displace-mobile" 
               colorInterpolationFilters="sRGB" 
               x="-20%" 
@@ -143,7 +157,7 @@ export default function ElectricBorder() {
               <feOffset in="noise1" dx="0" dy="0" result="offsetNoise1">
                 <animate 
                   attributeName="dy" 
-                  values="300; 0" 
+                  values="650; 0" 
                   dur="6s" 
                   repeatCount="indefinite" 
                   calcMode="linear" 
@@ -154,7 +168,7 @@ export default function ElectricBorder() {
               <feOffset in="noise2" dx="0" dy="0" result="offsetNoise2">
                 <animate 
                   attributeName="dy" 
-                  values="0; -300" 
+                  values="0; -650" 
                   dur="6s" 
                   repeatCount="indefinite" 
                   calcMode="linear" 
@@ -165,7 +179,7 @@ export default function ElectricBorder() {
               <feOffset in="noise3" dx="0" dy="0" result="offsetNoise3">
                 <animate 
                   attributeName="dx" 
-                  values="250; 0" 
+                  values="520; 0" 
                   dur="6s" 
                   repeatCount="indefinite" 
                   calcMode="linear" 
@@ -176,7 +190,7 @@ export default function ElectricBorder() {
               <feOffset in="noise4" dx="0" dy="0" result="offsetNoise4">
                 <animate 
                   attributeName="dx" 
-                  values="0; -250" 
+                  values="0; -520" 
                   dur="6s" 
                   repeatCount="indefinite" 
                   calcMode="linear" 
@@ -239,7 +253,7 @@ export default function ElectricBorder() {
                 className="slider"
               />
               <div className="slider-fill" style={{ width: `${(speed / 12) * 100}%` }}></div>
-              <div className="slider-handle" style={{ left: `calc(${(speed / 12) * 100}% - 6px)` }}></div>
+              <div className="slider-handle" style={{ left: `calc(${(speed / 12) * 100}% - 9px)` }}></div>
             </div>
           </div>
 
@@ -255,7 +269,7 @@ export default function ElectricBorder() {
                 className="slider"
               />
               <div className="slider-fill" style={{ width: `${chaos}%` }}></div>
-              <div className="slider-handle" style={{ left: `calc(${chaos}% - 6px)` }}></div>
+              <div className="slider-handle" style={{ left: `calc(${chaos}% - 9px)` }}></div>
             </div>
           </div>
         </div>

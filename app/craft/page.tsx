@@ -364,7 +364,7 @@ export default function CraftPage() {
                       </p>
                     )}
                     <div className="flex-1">
-                      <p className="text-[16px] font-medium text-gray-900 underline sm:no-underline">
+                      <p className="text-[14px] font-medium text-gray-900 underline sm:no-underline">
                         {item.title}
                       </p>
                       <p className="text-[14px] sm:text-[15px] text-gray-600 mt-0.5">
@@ -422,7 +422,7 @@ export default function CraftPage() {
                       </p>
                     )}
                     <div className="flex-1">
-                      <p className="text-[16px] font-medium text-gray-900 underline sm:no-underline">
+                      <p className="text-[14px] font-medium text-gray-900 underline sm:no-underline">
                         {item.title}
                       </p>
                       <p className="text-[14px] sm:text-[15px] text-gray-600 mt-0.5">
@@ -480,7 +480,7 @@ export default function CraftPage() {
                       </p>
                     )}
                     <div className="flex-1">
-                      <p className="text-[16px] font-medium text-gray-900 underline sm:no-underline">
+                      <p className="text-[14px] font-medium text-gray-900 underline sm:no-underline">
                         {item.title}
                       </p>
                       <p className="text-[14px] sm:text-[15px] text-gray-600 mt-0.5">
@@ -538,7 +538,7 @@ export default function CraftPage() {
                       </p>
                     )}
                     <div className="flex-1">
-                      <p className="text-[16px] font-medium text-gray-900 underline sm:no-underline">
+                      <p className="text-[14px] font-medium text-gray-900 underline sm:no-underline">
                         {item.title}
                       </p>
                       <p className="text-[14px] sm:text-[15px] text-gray-600 mt-0.5">
