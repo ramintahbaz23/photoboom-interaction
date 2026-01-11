@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <AnimatedPage variant="dramatic">
       <div className="min-h-screen" style={{ backgroundColor: '#E2DEDB' }}>
-        <main className="relative px-5 sm:px-6 pt-24 sm:pt-32 pb-28 sm:pb-32 min-h-screen flex items-center justify-center">
+        <main className="relative px-5 sm:px-6 flex items-center justify-center min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-72px)] py-8">
           <div className="max-w-[680px] mx-auto w-full">
             <div className="max-w-[560px] mx-auto">
               <h1 className="text-[16px] font-medium text-black mb-3 sm:mb-4">

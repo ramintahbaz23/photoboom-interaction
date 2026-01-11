@@ -35,6 +35,7 @@
       var(--color-neutral-900),
       var(--color-neutral-900)
     );
+  will-change: background;
 }
 
 .card-container-wrapper {
@@ -60,6 +61,8 @@
   margin-top: -4px;
   margin-left: -4px;
   filter: url(#ramin-electric-displace);
+  will-change: filter;
+  transform: translateZ(0); /* Force GPU acceleration */
 }
 
 .glow-layer-1 {
@@ -271,6 +274,7 @@
 .electric-border-wrapper {
   position: relative;
   width: 100%;
+  padding-bottom: 300px; /* Extra space for config panel when open */
 }
 
 .card-container-wrapper {

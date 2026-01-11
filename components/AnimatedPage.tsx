@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 type AnimatedPageVariant = 'default' | 'dramatic';
 
@@ -16,7 +16,7 @@ export default function AnimatedPage({ children, className, variant = 'default' 
   const prefersReducedMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setMounted(true);
   }, []);
 
