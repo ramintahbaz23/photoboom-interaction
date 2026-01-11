@@ -180,7 +180,7 @@ const essays: WorkItem[] = [
 const caseStudies: WorkItem[] = [
   {
     id: 'selected-case-studies',
-    title: 'Selected case studies',
+    title: 'Curious about something else?',
     description:
       "Deep dives into specific products, problems, and outcomes. Reach out if you'd like to see examples tailored to your interests.",
     badge: 'By request',
@@ -573,7 +573,7 @@ export default function CraftPage() {
           >
             <div className="flex items-baseline justify-between mb-4 max-w-[560px] mx-auto">
               <h2 className="text-[16px] font-medium text-black">
-                Case studies
+                Curious about something else?
               </h2>
             </div>
 
