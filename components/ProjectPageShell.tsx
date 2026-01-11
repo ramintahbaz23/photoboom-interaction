@@ -124,7 +124,7 @@ export default function ProjectPageShell({
       <main className={`relative z-10 px-5 sm:px-6 pt-24 sm:pt-32 flex flex-col ${hasChildren ? 'min-h-[1064px]' : ''} ${hasChildren ? '' : 'pb-28 sm:pb-32'}`} style={{ overflow: 'visible', overflowX: 'visible', overflowY: 'visible' }}>
         <div className={`max-w-[680px] mx-auto w-full flex flex-col ${hasChildren ? '' : ''}`} style={{ overflow: 'visible', overflowX: 'visible', overflowY: 'visible' }}>
           {/* Text content section */}
-          <div className={`flex flex-col ${hasChildren ? 'pb-6 sm:pb-0' : ''}`} style={{ overflowX: 'visible' }}>
+          <div className={`flex flex-col ${hasChildren ? 'pb-8 sm:pb-0' : ''}`} style={{ overflowX: 'visible' }}>
             <div className="flex items-start gap-2 sm:gap-3">
               {/* Back button – desktop only */}
               <Link
