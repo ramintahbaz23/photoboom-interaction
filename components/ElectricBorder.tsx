@@ -61,7 +61,7 @@ export default function ElectricBorder() {
       
       // Also try querying by ID as fallback for mobile
       if (isMobile) {
-        const mobileFilterById = document.getElementById('ramin-electric-displace-mobile') as SVGFilterElement;
+        const mobileFilterById = document.getElementById('ramin-electric-displace-mobile') as unknown as SVGFilterElement;
         if (mobileFilterById) {
           updateFilter(mobileFilterById);
         }
@@ -88,7 +88,7 @@ export default function ElectricBorder() {
       
       // Also try querying by ID as fallback for mobile
       if (isMobile) {
-        const mobileFilterById = document.getElementById('ramin-electric-displace-mobile') as SVGFilterElement;
+        const mobileFilterById = document.getElementById('ramin-electric-displace-mobile') as unknown as SVGFilterElement;
         if (mobileFilterById) {
           updateFilter(mobileFilterById);
         }
