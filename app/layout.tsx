@@ -25,6 +25,10 @@ export const metadata: Metadata = {
   description:
     "Designer who codes, working across product, film, hardware, and writing. Self-taught, learning by doing.",
   themeColor: "#E2DEDB",
+  icons: {
+    icon: '/images/avatar.png',
+    apple: '/images/avatar.png',
+  },
   openGraph: {
     title: "Ramin — Design Engineer",
     description:

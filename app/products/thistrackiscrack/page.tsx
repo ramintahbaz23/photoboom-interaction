@@ -30,8 +30,10 @@ export default function ThisTrackisCrackPage() {
   const [hoverSide, setHoverSide] = useState<'left' | 'right' | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const isHorizontalSwipeRef = useRef<boolean>(false);
 
   useEffect(() => {
     const updateIsMobile = () => {
@@ -122,62 +124,100 @@ export default function ThisTrackisCrackPage() {
   };
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (isTransitioning) return;
+    if (isTransitioning || !isMobile) return;
     const touch = e.touches[0];
     if (!touch) return;
     
-    // Store the initial touch position to detect scroll vs tap
     touchStartRef.current = {
       x: touch.clientX,
       y: touch.clientY,
     };
+    isHorizontalSwipeRef.current = false;
+
+    const handleTouchMove = (moveEvent: TouchEvent) => {
+      if (!touchStartRef.current || !isMobile) return;
+      
+      const moveTouch = moveEvent.touches[0];
+      if (!moveTouch) return;
+
+      const deltaX = moveTouch.clientX - touchStartRef.current.x;
+      const deltaY = moveTouch.clientY - touchStartRef.current.y;
+      const absDeltaX = Math.abs(deltaX);
+      const absDeltaY = Math.abs(deltaY);
+
+      if (!isHorizontalSwipeRef.current && (absDeltaX > 15 || absDeltaY > 15)) {
+        if (absDeltaX > absDeltaY * 2) {
+          isHorizontalSwipeRef.current = true;
+        }
+      }
+
+      if (isHorizontalSwipeRef.current && absDeltaX > 20) {
+        moveEvent.preventDefault();
+        moveEvent.stopPropagation();
+      }
+    };
+
+    const handleTouchEnd = (endEvent: TouchEvent) => {
+      if (!touchStartRef.current || !imageContainerRef.current || !isMobile) {
+        cleanup();
+        return;
+      }
+
+      const endTouch = endEvent.changedTouches[0];
+      if (!endTouch) {
+        cleanup();
+        return;
+      }
+
+      const deltaX = endTouch.clientX - touchStartRef.current.x;
+      const deltaY = endTouch.clientY - touchStartRef.current.y;
+      const absDeltaX = Math.abs(deltaX);
+      const absDeltaY = Math.abs(deltaY);
+      
+      const minSwipeDistance = 50;
+      const isHorizontalSwipe = isHorizontalSwipeRef.current && absDeltaX > minSwipeDistance && absDeltaX > absDeltaY;
+      
+      if (isHorizontalSwipe) {
+        endEvent.preventDefault();
+        endEvent.stopPropagation();
+        setIsTransitioning(true);
+        
+        if (deltaX > 0) {
+          setSwipeDirection('right');
+          setCurrentIndex((prev) => {
+            const newIndex = prev > 0 ? prev - 1 : mediaItems.length - 1;
+            return newIndex;
+          });
+        } else {
+          setSwipeDirection('left');
+          setCurrentIndex((prev) => {
+            const newIndex = prev < mediaItems.length - 1 ? prev + 1 : 0;
+            return newIndex;
+          });
+        }
+        
+        setTimeout(() => {
+          setIsTransitioning(false);
+          setSwipeDirection(null);
+        }, 300);
+      }
+
+      cleanup();
+    };
+
+    const cleanup = () => {
+      document.removeEventListener('touchmove', handleTouchMove, { passive: false } as any);
+      document.removeEventListener('touchend', handleTouchEnd);
+      touchStartRef.current = null;
+      isHorizontalSwipeRef.current = false;
+    };
+
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd);
   };
 
   const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (isTransitioning || !touchStartRef.current || !imageContainerRef.current) return;
-    
-    const touch = e.changedTouches[0];
-    if (!touch) return;
-
-    // Calculate the distance moved during the touch
-    const deltaX = Math.abs(touch.clientX - touchStartRef.current.x);
-    const deltaY = Math.abs(touch.clientY - touchStartRef.current.y);
-    const totalMovement = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    
-    // If movement is more than 10px, it's likely a scroll, not a tap
-    // Only trigger carousel navigation on intentional taps (small movement)
-    const isTap = totalMovement < 10;
-    
-    if (!isTap) {
-      // This was a scroll, not a tap - don't trigger carousel navigation
-      touchStartRef.current = null;
-      return;
-    }
-
-    e.stopPropagation();
-    const rect = imageContainerRef.current.getBoundingClientRect();
-    const x = touch.clientX - rect.left;
-    const width = rect.width;
-    const midpoint = width / 2;
-    
-    setIsTransitioning(true);
-    
-    if (x < midpoint) {
-      // Tapped left half - go to previous (loop to last if on first)
-      setCurrentIndex((prev) => {
-        const newIndex = prev > 0 ? prev - 1 : mediaItems.length - 1;
-        return newIndex;
-      });
-    } else {
-      // Tapped right half - go to next (loop to first if on last)
-      setCurrentIndex((prev) => {
-        const newIndex = prev < mediaItems.length - 1 ? prev + 1 : 0;
-        return newIndex;
-      });
-    }
-    
-    setTimeout(() => setIsTransitioning(false), 300);
-    touchStartRef.current = null;
+    if (!isMobile) return;
   };
 
   const getCursorClass = () => {
@@ -229,22 +269,35 @@ export default function ThisTrackisCrackPage() {
               width: '100%',
               height: '600px',
               maxHeight: '90vh',
+              touchAction: isMobile ? 'pan-x' : 'auto',
               ...getCursorStyle(),
             }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             onClick={handleClick}
             onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
           >
             <div className="relative w-full h-full rounded-lg overflow-hidden">
-              <AnimatePresence mode="wait" initial={false}>
+              <AnimatePresence mode="wait" initial={false} custom={swipeDirection}>
                 <motion.div
                   key={`media-${currentIndex}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+                  custom={swipeDirection}
+                  initial={{ 
+                    opacity: 0,
+                    x: swipeDirection === 'left' ? 20 : swipeDirection === 'right' ? -20 : 0
+                  }}
+                  animate={{ 
+                    opacity: 1,
+                    x: 0
+                  }}
+                  exit={{ 
+                    opacity: 0,
+                    x: swipeDirection === 'left' ? -20 : swipeDirection === 'right' ? 20 : 0
+                  }}
+                  transition={{ 
+                    duration: 0.3,
+                    ease: [0.25, 0.1, 0.25, 1]
+                  }}
                   className="absolute inset-0 w-full h-full"
                 >
                 {mediaItems[currentIndex].type === 'video' ? (
