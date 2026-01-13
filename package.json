@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "compress-videos": "node scripts/compress-videos.js"
   },
   "dependencies": {
     "bloom-menu": "^0.1.0",

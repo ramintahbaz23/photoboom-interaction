@@ -153,10 +153,34 @@ export default function VisualSystemHoverPage() {
   useEffect(() => {
     if (openModal && videoRef.current) {
       setModalVideoLoading((prev) => ({ ...prev, [openModal]: true }));
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {
-        // Ignore play errors
-      });
+      const video = videoRef.current;
+      video.currentTime = 0;
+      
+      // Try to play, and if it fails, wait for enough data
+      const tryPlay = () => {
+        video.play().catch(() => {
+          // If play fails, wait for canplay event
+          const handleCanPlay = () => {
+            video.play().catch(() => {
+              // Ignore play errors
+            });
+            video.removeEventListener('canplay', handleCanPlay);
+          };
+          video.addEventListener('canplay', handleCanPlay);
+        });
+      };
+      
+      // If video already has some data, try playing immediately
+      if (video.readyState >= 2) {
+        tryPlay();
+      } else {
+        // Otherwise wait for loadeddata
+        const handleLoadedData = () => {
+          tryPlay();
+          video.removeEventListener('loadeddata', handleLoadedData);
+        };
+        video.addEventListener('loadeddata', handleLoadedData);
+      }
     }
   }, [openModal]);
 
@@ -492,13 +516,20 @@ export default function VisualSystemHoverPage() {
                             playsInline
                             preload="auto"
                             className="w-full h-full object-cover"
+                            poster={selectedItem.image}
                             onLoadedData={() => {
                               setModalVideoLoading((prev) => ({ ...prev, [selectedItem.id]: false }));
                             }}
                             onCanPlay={() => {
                               setModalVideoLoading((prev) => ({ ...prev, [selectedItem.id]: false }));
                             }}
+                            onCanPlayThrough={() => {
+                              setModalVideoLoading((prev) => ({ ...prev, [selectedItem.id]: false }));
+                            }}
                             onWaiting={() => {
+                              setModalVideoLoading((prev) => ({ ...prev, [selectedItem.id]: true }));
+                            }}
+                            onLoadStart={() => {
                               setModalVideoLoading((prev) => ({ ...prev, [selectedItem.id]: true }));
                             }}
                           />
