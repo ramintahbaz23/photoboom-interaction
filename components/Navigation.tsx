@@ -66,7 +66,7 @@ export default function Navigation() {
               alt="Avatar"
               width={96}
               height={96}
-              className="h-full w-full rounded-full object-cover translate-x-[1px] sm:translate-x-0"
+              className="h-full w-full rounded-full object-cover translate-x-[2px] sm:translate-x-[1px]"
               priority
               quality={100}
               sizes="48px"
