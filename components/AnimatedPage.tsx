@@ -44,8 +44,8 @@ export default function AnimatedPage({ children, className, variant = 'default' 
         filter: ['blur(20px)', 'blur(8px)', 'blur(0px)'] as string[],
       },
       transition: {
-        duration: 1.0,
-        delay: 0.06,
+        duration: 0.65,
+        delay: 0.04,
         ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
         opacity: { times: [0, 0.5, 1] },
         y: { times: [0, 0.65, 1] },
@@ -57,11 +57,11 @@ export default function AnimatedPage({ children, className, variant = 'default' 
       initial: { opacity: 0, y: 24, filter: 'blur(24px)' },
       animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
       transition: {
-        delay: 0.08,
+        delay: 0.05,
         ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
-        opacity: { duration: 0.9 },
-        y: { duration: 1.2 },
-        filter: { duration: 1.4 },
+        opacity: { duration: 0.6 },
+        y: { duration: 0.8 },
+        filter: { duration: 0.9 },
       },
     },
   };
